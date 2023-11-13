@@ -1,5 +1,7 @@
 import {
   Form,
+  json,
+  redirect,
   useActionData,
   useNavigate,
   useNavigation,
@@ -19,7 +21,7 @@ function EventForm({ method, event }) {
   }
 
   return (
-    <Form method="post" className={classes.form}>
+    <Form method={method} className={classes.form}>
       {data &&
         data.errors &&
         Object.values(data.errors).map((err) => <li key={err}>{err}</li>)}
@@ -76,3 +78,29 @@ function EventForm({ method, event }) {
 }
 
 export default EventForm;
+
+export async function action({ request, params }) {
+  const data = await request.formData();
+  const formDataObject = Object.fromEntries(data.entries());
+  let endpoint = "http://localhost:8080/events";
+  let errorMessage = "An Error has occurred while creating the event";
+
+  if (request.method === "PATCH") {
+    endpoint += "/" + params.id;
+    errorMessage = "An Error has occurred while updating the event";
+  }
+
+  const response = await fetch(endpoint, {
+    method: request.method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formDataObject),
+  });
+
+  if (response.status === 422) return response;
+
+  if (!response.ok) {
+    throw json({ message: errorMessage }, { status: 500 });
+  }
+
+  return redirect("/events");
+}

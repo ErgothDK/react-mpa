@@ -3,15 +3,14 @@ import Layout from "./pages/layouts/Layout.jsx";
 import Error from "./pages/commons/Error.jsx";
 import HomePage from "./pages/site/Index.jsx";
 import EventsPage, { loader as eventsLoader } from "./pages/events/Index.jsx";
-import NewEventPage, {
-  action as newEventAction,
-} from "./pages/events/Create.jsx";
+import NewEventPage from "./pages/events/Create.jsx";
 import EventDetailPage, {
   loader as eventDetailLoader,
   action as deleteEventAction,
 } from "./pages/events/View.jsx";
 import EditEventPage from "./pages/events/Update.jsx";
 import EventsLayout from "./pages/layouts/EventsLayout.jsx";
+import { action as manipulateEventAction } from "./components/EventForm";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +28,11 @@ const router = createBrowserRouter([
             element: <EventsPage />,
             loader: eventsLoader,
           },
-          { path: "new", element: <NewEventPage />, action: newEventAction },
+          {
+            path: "new",
+            element: <NewEventPage />,
+            action: manipulateEventAction,
+          },
           {
             path: ":id",
             id: "event-detail",
@@ -43,6 +46,7 @@ const router = createBrowserRouter([
               {
                 path: "edit",
                 element: <EditEventPage />,
+                action: manipulateEventAction,
               },
             ],
           },
