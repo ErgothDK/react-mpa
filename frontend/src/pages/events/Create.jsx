@@ -10,20 +10,12 @@ export default NewEventPage;
 
 export async function action({ request, params }) {
   const data = await request.formData();
-
-  const eventData = {
-    title: data.get("title"),
-    image: data.get("image"),
-    date: data.get("date"),
-    description: data.get("description"),
-  };
+  const formDataObject = Object.fromEntries(data.entries());
 
   const response = await fetch("http://localhost:8080/events", {
     method: request.method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(eventData),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formDataObject),
   });
 
   if (!response.ok) {
@@ -33,5 +25,5 @@ export async function action({ request, params }) {
     );
   }
 
-  return redirect("/events/");
+  return redirect("/events");
 }
