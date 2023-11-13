@@ -2,9 +2,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./pages/layouts/Layout.jsx";
 import Error from "./pages/commons/Error.jsx";
 import HomePage from "./pages/site/Index.jsx";
-import EventsPage from "./pages/events/Index.jsx";
+import EventsPage, { loader as eventsLoader } from "./pages/events/Index.jsx";
 import NewEventPage from "./pages/events/Create.jsx";
-import EventDetailPage from "./pages/events/View.jsx";
+import EventDetailPage, {
+  loader as eventLoader,
+} from "./pages/events/View.jsx";
 import EditEventPage from "./pages/events/Update.jsx";
 import EventsLayout from "./pages/layouts/EventsLayout.jsx";
 
@@ -22,19 +24,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <EventsPage />,
-            loader: async () => {
-              const response = await fetch("http://localhost:8080/events");
-
-              if (!response.ok) {
-                // todo: handle error
-              } else {
-                const resData = await response.json();
-                return resData.events;
-              }
-            },
+            loader: eventsLoader,
           },
           { path: "new", element: <NewEventPage /> },
-          { path: ":id", element: <EventDetailPage /> },
+          { path: ":id", element: <EventDetailPage />, loader: eventLoader },
           { path: ":id/edit", element: <EditEventPage /> },
         ],
       },
