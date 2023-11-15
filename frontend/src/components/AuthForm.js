@@ -21,14 +21,14 @@ function AuthForm() {
       <Form method="post" className={classes.form}>
         <h1>{isLogin ? "Log in" : "Create a new user"}</h1>
         {data && data.errors && (
-          <ul style={{ color: "red" }}>
+          <ul>
             {Object.values(data.errors).map((err) => (
               <li key={err}>{err}</li>
             ))}
           </ul>
         )}
 
-        {data && data.message && <p style={{ color: "red" }}>{data.message}</p>}
+        {data && data.message && <p>{data.message}</p>}
         <p>
           <label htmlFor="email">Email</label>
           <input id="email" type="email" name="email" required />
